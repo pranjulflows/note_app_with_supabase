@@ -53,28 +53,43 @@ class _NotesListingState extends State<NotesListing> {
       appBar: AppBar(
 
         title: const Text("Notes Listing"),
-      ),
-      body: StreamBuilder<List<Map<String,dynamic>>>(
-        stream: _notesStream,
-        builder: (context,snapshot){
-          if(!snapshot.hasData){
-            return const Center(child: CircularProgressIndicator(),);
-          }
-
-          final notes = snapshot.data!.where((element) => element['uuid'] == uuid).toList();
-
-
-          return ListView.builder(
-              itemCount: notes.length,
-              itemBuilder: (context,index){
-                return ListTile(
-                  title: Text(notes[index]['body']),
-
-                );
-              });
-        },
 
       ),
+      body: 
+      Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          InkWell(
+              onTap: (){
+                Navigator.pushReplacementNamed(context, '/chat');
+              },
+              child: const Icon(Icons.chat,size: 40,)),
+          Expanded(
+            child: StreamBuilder<List<Map<String,dynamic>>>(
+              stream: _notesStream,
+              builder: (context,snapshot){
+                if(!snapshot.hasData){
+                  return const Center(child: CircularProgressIndicator(),);
+                }
+
+                final notes = snapshot.data!.where((element) => element['uuid'] == uuid).toList();
+
+
+                return ListView.builder(
+                    itemCount: notes.length,
+                    itemBuilder: (context,index){
+                      return ListTile(
+                        title: Text(notes[index]['body']),
+
+                      );
+                    });
+              },
+
+            ),
+          ),
+        ],
+      ),
+      
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           showDialog(context: context, builder: ((context){

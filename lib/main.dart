@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:supabase_table_project/constants.dart';
+import 'package:supabase_table_project/pages/app_service.dart';
+import 'package:supabase_table_project/pages/chat.dart';
+import 'package:supabase_table_project/pages/chat_page.dart';
 import 'package:supabase_table_project/pages/home_page.dart';
 import 'package:supabase_table_project/pages/notes_listing.dart';
 import 'package:supabase_table_project/pages/signin_page.dart';
 import 'package:supabase_table_project/pages/signup_page.dart';
 import 'package:supabase_table_project/pages/simpleapp_page.dart';
+import 'package:provider/provider.dart' as provider;
+import 'package:supabase_table_project/pages/swipe_cards.dart';
 
 void main() async{
 
@@ -16,7 +21,15 @@ void main() async{
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6eHlyYXhiZ3ducmdraXFtenZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODA1MTYyNjQsImV4cCI6MTk5NjA5MjI2NH0.E5fj_KpW4mG2F2BgaIzeBBqBIozX_xWLZPP_sWcRjEU',
   );
 
-  runApp(const MyApp());
+  runApp(provider.MultiProvider(
+    providers:[
+     provider.ChangeNotifierProvider<AppService>(create:(_) => AppService())
+    ],
+    child: const MyApp(),
+  ));
+
+
+  /*runApp(const MyApp());*/
 }
 
 class MyApp extends StatelessWidget {
@@ -39,6 +52,8 @@ class MyApp extends StatelessWidget {
         '/signup':(context) => const SignUpPage(),
         '/simpleapp':(context) => const SimpleAppPage(),
         '/noteslisting':(context) => const NotesListing(),
+        '/chat':(context) => const Chat(),
+        '/swipecards':(context) => const SwipeCardsScreen(),
 
       },
 
