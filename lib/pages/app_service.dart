@@ -35,12 +35,28 @@ class AppService extends ChangeNotifier {
   Future<String> _getUserTo() async {
     final response = await _supabase
         .from('messages')
-        .select('id')
-        .not('id', 'eq', getCurrentUserId())
+        .select('user_to')
+        .not('user_to', 'eq', getCurrentUserId())
         .execute();
 
-    return response.data[0]['id'];
+    return response.data[0]['user_to'];
+
   }
+
+/*geMessages() async {
+   await _supabase
+      .from('messages')
+      .stream(primaryKey: ['user_id'])
+      .order('user_from')
+      .toList()
+      .then((value) {
+    log("messagewewewewew $value");
+  })
+      .catchError((onError) {
+    log("FUTURE ERROR $onError");
+  });
+}*/
+
 
   Stream<List<Message>> getMessages() {
 
@@ -52,11 +68,13 @@ class AppService extends ChangeNotifier {
       log("message  $value");
 
     });*/
+String userId = getCurrentUserId();
+log("userIDDDD $userId");
 
     var messages = _supabase
         .from('messages')
-        .stream(primaryKey: ['id'])
-        .order('inserted_at')
+        .stream(primaryKey: ['user_from'])
+        .order('user_from')
         .map((maps) => maps
             .map((item) => Message.fromJson(item, getCurrentUserId()))
             .toList());
@@ -70,17 +88,17 @@ class AppService extends ChangeNotifier {
   Future<void> saveMessage(String content) async {
     final userTo = await _getUserTo();
 
-    final message = Message(content: content, userFrom: "", userTo: userTo);
+    final message = Message(content: content, userFrom: getCurrentUserId(), userTo: userTo,);
 
 /*    final message = Message.create(
         content: content, userFrom: getCurrentUserId(), userTo: userTo);*/
 
-    await _supabase.from('messages').insert(message.toJson()).execute();
+    await _supabase.from('messages').insert(message.toJson());
   }
 
   bool isAuthentificated() => _supabase.auth.currentUser != null;
 
-   getCurrentUserId() =>
+   String getCurrentUserId() =>
       isAuthentificated() ? _supabase.auth.currentUser!.id : "";
 
   String getCurrentUserEmail() =>

@@ -38,6 +38,10 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     final appService = context.read<AppService>();
+   /* WidgetsFlutterBinding().addPostFrameCallback((timeStamp) {
+      appService.geMessages();
+
+    });*/
     return Scaffold(
       appBar: AppBar(
         title: const Text("Messages"),
